@@ -172,8 +172,9 @@ try:
     # TABLE (CENTERED & CLEAN)
     # ==========================
     st.subheader("📈 Top 10 Most Liquid Government Bonds")
-
-    display_df = final_df.rename(columns={
+    
+    # Rename columns for UI
+    ui_df = final_df.rename(columns={
         "SYMBOL": "Bond",
         "COUPON_RATE": "Coupon (%)",
         "LTP": "LTP",
@@ -182,25 +183,62 @@ try:
         "YEARS_TO_MATURITY": "Years to Maturity",
         "YTM_%": "YTM (%)"
     })
-
-    styled_df = (
-        display_df
-        .style
-        .format({
-            "Coupon (%)": "{:.2f}",
-            "LTP": "{:.2f}",
-            "YTM (%)": "{:.2f}",
-            "Years to Maturity": "{:.2f}",
-            "Volume": "{:,.0f}"
-        })
-        .set_properties(**{"text-align": "center"})
-        .set_table_styles([
-            {"selector": "th", "props": [("text-align", "center"), ("font-weight", "600")]},
-            {"selector": "td", "props": [("text-align", "center")]}
-        ])
-    )
-
-    st.dataframe(styled_df, use_container_width=True, hide_index=True)
+    
+    # Format values as strings for clean display
+    ui_df["Coupon (%)"] = ui_df["Coupon (%)"].map(lambda x: f"{x:.2f}")
+    ui_df["LTP"] = ui_df["LTP"].map(lambda x: f"{x:.2f}")
+    ui_df["YTM (%)"] = ui_df["YTM (%)"].map(lambda x: f"{x:.2f}")
+    ui_df["Years to Maturity"] = ui_df["Years to Maturity"].map(lambda x: f"{x:.2f}")
+    ui_df["Volume"] = ui_df["Volume"].map(lambda x: f"{int(x):,}")
+    
+    # Build premium HTML table
+    table_html = """
+    <style>
+    .table-container {
+        overflow-x: auto;
+    }
+    .custom-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 15px;
+    }
+    .custom-table thead th {
+        text-align: center;
+        font-weight: 600;
+        padding: 12px;
+        border-bottom: 1px solid #333;
+    }
+    .custom-table tbody td {
+        text-align: center;
+        padding: 12px;
+        border-bottom: 1px solid #222;
+    }
+    .custom-table tbody tr:hover {
+        background-color: rgba(255, 255, 255, 0.04);
+    }
+    </style>
+    
+    <div class="table-container">
+    <table class="custom-table">
+        <thead>
+            <tr>
+    """
+    
+    for col in ui_df.columns:
+        table_html += f"<th>{col}</th>"
+    
+    table_html += "</tr></thead><tbody>"
+    
+    for _, row in ui_df.iterrows():
+        table_html += "<tr>"
+        for val in row:
+            table_html += f"<td>{val}</td>"
+        table_html += "</tr>"
+    
+    table_html += "</tbody></table></div>"
+    
+    st.markdown(table_html, unsafe_allow_html=True)
+    
 
     # ==========================
     # DOWNLOAD

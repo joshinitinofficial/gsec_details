@@ -54,6 +54,12 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 st.markdown("---")
+st.markdown(
+    "🔗 **Data Source:** "
+    "[Bonds Traded in Capital Market – NSE India]"
+    "(https://www.nseindia.com/market-data/bonds-traded-in-capital-market)",
+    unsafe_allow_html=True
+)
 
 # ==========================
 # LOAD STATIC DEBT MASTER

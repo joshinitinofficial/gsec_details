@@ -143,7 +143,7 @@ final_df = df[
         "COUPON_RATE",
         "LTP",
         "VOLUME",
-        "REDEMPTION DATE",
+        "REDEMPTION_DATE_DISPLAY",
         "YEARS_TO_MATURITY",
         "YTM_%"
     ]

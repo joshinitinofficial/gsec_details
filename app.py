@@ -173,7 +173,6 @@ try:
     # ==========================
     st.subheader("📈 Top 10 Most Liquid Government Bonds")
     
-    # Rename columns for UI
     ui_df = final_df.rename(columns={
         "SYMBOL": "Bond",
         "COUPON_RATE": "Coupon (%)",
@@ -184,44 +183,50 @@ try:
         "YTM_%": "YTM (%)"
     })
     
-    # Format values as strings for clean display
+    # Format for display
     ui_df["Coupon (%)"] = ui_df["Coupon (%)"].map(lambda x: f"{x:.2f}")
     ui_df["LTP"] = ui_df["LTP"].map(lambda x: f"{x:.2f}")
     ui_df["YTM (%)"] = ui_df["YTM (%)"].map(lambda x: f"{x:.2f}")
     ui_df["Years to Maturity"] = ui_df["Years to Maturity"].map(lambda x: f"{x:.2f}")
     ui_df["Volume"] = ui_df["Volume"].map(lambda x: f"{int(x):,}")
     
-    # Build premium HTML table
     table_html = """
     <style>
-    .table-container {
-        overflow-x: auto;
+    /* FORCE OVERRIDE STREAMLIT STYLES */
+    table.gsec-table {
+        width: 100% !important;
+        border-collapse: separate !important;
+        border-spacing: 0 8px !important;
+        font-size: 15px !important;
     }
-    .custom-table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 15px;
+    
+    table.gsec-table thead th {
+        text-align: center !important;
+        font-weight: 700 !important;
+        padding: 12px !important;
+        background: rgba(255,255,255,0.06) !important;
+        border-bottom: 1px solid rgba(255,255,255,0.15) !important;
     }
-    .custom-table thead th {
-        text-align: center;
-        font-weight: 600;
-        padding: 12px;
-        border-bottom: 1px solid #333;
+    
+    table.gsec-table tbody tr {
+        background: rgba(255,255,255,0.02) !important;
     }
-    .custom-table tbody td {
-        text-align: center;
-        padding: 12px;
-        border-bottom: 1px solid #222;
+    
+    table.gsec-table tbody td {
+        text-align: center !important;
+        padding: 12px !important;
+        border-top: 1px solid rgba(255,255,255,0.08) !important;
+        border-bottom: 1px solid rgba(255,255,255,0.08) !important;
     }
-    .custom-table tbody tr:hover {
-        background-color: rgba(255, 255, 255, 0.04);
+    
+    table.gsec-table tbody tr:hover {
+        background: rgba(255,255,255,0.08) !important;
     }
     </style>
     
-    <div class="table-container">
-    <table class="custom-table">
-        <thead>
-            <tr>
+    <table class="gsec-table">
+    <thead>
+    <tr>
     """
     
     for col in ui_df.columns:
@@ -235,9 +240,10 @@ try:
             table_html += f"<td>{val}</td>"
         table_html += "</tr>"
     
-    table_html += "</tbody></table></div>"
+    table_html += "</tbody></table>"
     
     st.markdown(table_html, unsafe_allow_html=True)
+
     
 
     # ==========================

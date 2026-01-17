@@ -183,16 +183,16 @@ try:
         "YTM_%": "YTM (%)"
     })
     
-    # Format for display
-    ui_df["Coupon (%)"] = ui_df["Coupon (%)"].map(lambda x: f"{x:.2f}")
+    # ---- FORMAT VALUES ----
+    ui_df["Coupon (%)"] = ui_df["Coupon (%)"].map(lambda x: f"{x:.2f}%")
+    ui_df["YTM (%)"] = ui_df["YTM (%)"].map(lambda x: f"{x:.2f}%")
     ui_df["LTP"] = ui_df["LTP"].map(lambda x: f"{x:.2f}")
-    ui_df["YTM (%)"] = ui_df["YTM (%)"].map(lambda x: f"{x:.2f}")
     ui_df["Years to Maturity"] = ui_df["Years to Maturity"].map(lambda x: f"{x:.2f}")
     ui_df["Volume"] = ui_df["Volume"].map(lambda x: f"{int(x):,}")
     
+    # ---- PREMIUM TABLE WITH FORCED CSS ----
     table_html = """
     <style>
-    /* FORCE OVERRIDE STREAMLIT STYLES */
     table.gsec-table {
         width: 100% !important;
         border-collapse: separate !important;
@@ -200,18 +200,15 @@ try:
         font-size: 15px !important;
     }
     
+    /* Header */
     table.gsec-table thead th {
         text-align: center !important;
         font-weight: 700 !important;
         padding: 12px !important;
-        background: rgba(255,255,255,0.06) !important;
-        border-bottom: 1px solid rgba(255,255,255,0.15) !important;
+        border-bottom: 1px solid rgba(255,255,255,0.2) !important;
     }
     
-    table.gsec-table tbody tr {
-        background: rgba(255,255,255,0.02) !important;
-    }
-    
+    /* Cells */
     table.gsec-table tbody td {
         text-align: center !important;
         padding: 12px !important;
@@ -219,8 +216,21 @@ try:
         border-bottom: 1px solid rgba(255,255,255,0.08) !important;
     }
     
+    /* Hover */
     table.gsec-table tbody tr:hover {
-        background: rgba(255,255,255,0.08) !important;
+        background: rgba(255,255,255,0.06) !important;
+    }
+    
+    /* Bond column text → BLUE */
+    table.gsec-table tbody td.bond-col {
+        color: #4da3ff !important;
+        font-weight: 600 !important;
+    }
+    
+    /* YTM column text → GREEN */
+    table.gsec-table tbody td.ytm-col {
+        color: #3ddc97 !important;
+        font-weight: 600 !important;
     }
     </style>
     
@@ -236,13 +246,19 @@ try:
     
     for _, row in ui_df.iterrows():
         table_html += "<tr>"
-        for val in row:
-            table_html += f"<td>{val}</td>"
+        for col, val in zip(ui_df.columns, row):
+            if col == "Bond":
+                table_html += f"<td class='bond-col'>{val}</td>"
+            elif col == "YTM (%)":
+                table_html += f"<td class='ytm-col'>{val}</td>"
+            else:
+                table_html += f"<td>{val}</td>"
         table_html += "</tr>"
     
     table_html += "</tbody></table>"
     
     st.markdown(table_html, unsafe_allow_html=True)
+
 
     
 

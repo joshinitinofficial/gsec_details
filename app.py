@@ -143,11 +143,34 @@ final_df = df[
 # ==========================
 # METRICS
 # ==========================
+# ==========================
+# KEY YTM INSIGHTS
+# ==========================
+max_row = final_df.loc[final_df["YTM_%"].idxmax()]
+min_row = final_df.loc[final_df["YTM_%"].idxmin()]
+
+ytm_spread = max_row["YTM_%"] - min_row["YTM_%"]
+
 c1, c2, c3 = st.columns(3)
 
-c1.metric("📊 Avg YTM", f"{final_df['YTM_%'].mean():.2f}%")
-c2.metric("💰 Highest YTM", f"{final_df['YTM_%'].max():.2f}%")
-c3.metric("📅 Avg Maturity", f"{final_df['YEARS_TO_MATURITY'].mean():.1f} yrs")
+c1.metric(
+    "🏆 Max YTM Bond",
+    max_row["SYMBOL"],
+    f"{max_row['YTM_%']:.2f}%"
+)
+
+c2.metric(
+    "🧊 Min YTM Bond",
+    min_row["SYMBOL"],
+    f"{min_row['YTM_%']:.2f}%"
+)
+
+c3.metric(
+    "📐 YTM Spread",
+    f"{ytm_spread:.2f}%",
+    "Max − Min"
+)
+
 
 st.markdown("---")
 

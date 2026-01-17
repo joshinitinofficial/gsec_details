@@ -125,9 +125,18 @@ df["YTM_%"] = df.apply(
     axis=1
 )
 
+def format_date(d):
+    if pd.isna(d):
+        return ""
+    day = d.day
+    suffix = "th" if 11 <= day <= 13 else {1: "st", 2: "nd", 3: "rd"}.get(day % 10, "th")
+    return d.strftime(f"%d{suffix} %b %Y")
+
 # ==========================
 # FINAL OUTPUT
 # ==========================
+df["REDEMPTION_DATE_DISPLAY"] = df["REDEMPTION DATE"].apply(format_date)
+
 final_df = df[
     [
         "SYMBOL",

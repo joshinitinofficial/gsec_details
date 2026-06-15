@@ -37,7 +37,7 @@ st.markdown("""
             If you have any doubts, want to discuss a strategy in detail, or need personal guidance, let's connect 1-on-1.
         </p>
     </div>
-    <a href="https://superprofile.bio/bookings/beingsystemtrader" target="_blank" style="text-decoration: none;">
+    <a href="https://superprofile.bio/bookings/joshiquant" target="_blank" style="text-decoration: none;">
         <div style="
             background-color: #3b82f6;
             color: white;
